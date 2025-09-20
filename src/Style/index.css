@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  
+    
+}
+
+.app-container {
+  display: flex;
+}
+
+/* Push main content */
+.main-content {
+  margin-left: 280px; /* same as sidebar width */
+  padding: 25px;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  color: white;
+  background: linear-gradient(
+    to right,
+    #0F123B 0%,
+    #090D2E 59%,
+    #020515 100%
+  );
+}
+
+.heading{
+  font-size: 35px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  
+}
+
