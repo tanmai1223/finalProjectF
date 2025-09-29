@@ -4,10 +4,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import Sidebar from "../Components/Sidebar";
 import "../Style/Analytics.css";
 import StatCard from "../Components/StatCard";
+import Chart from "../Components/Chart";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 function Analytics() {
   const [date, setDate] = useState(new Date());
   const [info, setInfo] = useState(null);
+  const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const fetchInfo = async (selectedDate) => {
@@ -17,7 +21,7 @@ function Analytics() {
     setLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:5000/api/logs/analysis?year=${year}&month=${month}`
+        `${API_URL}/api/logs/analysis?year=${year}&month=${month}`
       );
       const data = await res.json();
       setInfo(data);
@@ -29,9 +33,36 @@ function Analytics() {
     }
   };
 
+  const fetchData = async (selectedDate) => {
+    const year = selectedDate.getFullYear();
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
+
+    try {
+      const res = await fetch(
+        `${API_URL}/api/logs/chart?year=${year}&month=${month}`
+      );
+      const data = await res.json();
+      setChartData(data);
+    } catch (error) {
+      console.log("Error fetching chart data:", error);
+      setChartData([]);
+    }
+  };
+
   useEffect(() => {
     fetchInfo(date);
+    fetchData(date);
   }, [date]);
+
+  const formatNumber = (num) => {
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1) + "M"; // 1,200,000 → 1.2M
+    } else if (num >= 1000) {
+      return (num / 1000).toFixed(1) + "k"; // 10,232 → 10.2k
+    } else {
+      return num.toString();
+    }
+  };
 
   return (
     <div className="app-container">
@@ -53,6 +84,7 @@ function Analytics() {
           <span>&nbsp;&gt;</span>
         </div>
 
+        {/* Dashboard Stats */}
         <div className="dashboard">
           {loading ? (
             <p>Loading...</p>
@@ -60,7 +92,7 @@ function Analytics() {
             <>
               <StatCard
                 title="Uptime (Per Month)"
-                value={info?.uptimePercent || 0} // already 0–100
+                value={info?.uptimePercent || 0}
                 displayText={`${Math.round(info?.uptimePercent * 10) / 10}%`}
                 extra={
                   info?.lastErrorTimestamp
@@ -80,15 +112,17 @@ function Analytics() {
 
               <StatCard
                 title="Total Response Time"
-                value={Math.min(info?.totalResponseTime || 0, 100)} // normalize to max 100
+                value={Math.min(info?.totalResponseTime || 0, 100)}
                 displayText={
                   info?.totalResponseTime
-                    ? `${Math.round(info.totalResponseTime * 10) / 10} ms`
+                    ? `${formatNumber(
+                        Math.round(info.totalResponseTime * 10) / 10
+                      )} ms`
                     : "-"
                 }
                 extra={
                   info?.avgResponseTime
-                    ? `Avgerage Response Time: ${
+                    ? `Average Response Time: ${
                         Math.round(info.avgResponseTime * 10) / 10
                       } ms`
                     : "-"
@@ -97,20 +131,22 @@ function Analytics() {
               />
 
               <StatCard
-                title="Request Volume"
-                value={Math.min((info?.totalRequests || 0) / 10, 100)} // scale large numbers down
-                displayText={info?.totalRequests ?? 0}
+                title="Request Volume (Per Month)"
+                value={Math.min((info?.totalRequests || 0) / 10, 100)}
+                displayText={formatNumber(info?.totalRequests) ?? 0}
                 extra={
                   info?.totalRequests
-                    ? `Request per week :  ${Math.round(info.totalRequests / 4)} requests`
+                    ? `Request per week :  ${Math.round(
+                        info.totalRequests / 4
+                      )} requests`
                     : "-"
                 }
                 color="#FFD700"
               />
 
               <StatCard
-                title="Error Rate"
-                value={info?.errorPercent || 0} // 0–100
+                title="Error Rate (Per Month)"
+                value={info?.errorPercent || 0}
                 displayText={`${Math.round(info?.errorPercent * 10) / 10}%`}
                 extra={`Most common error: ${
                   info?.maxErrorStatus?._id ?? "-"
@@ -121,6 +157,12 @@ function Analytics() {
           ) : (
             <p>No data available for selected month.</p>
           )}
+        </div>
+
+        {/* Chart Section */}
+        <div className="chart-section">
+          <h3 className="chart-sectionh3">Uptime Percentage Over Time</h3>
+          <Chart data={chartData} />
         </div>
       </div>
     </div>

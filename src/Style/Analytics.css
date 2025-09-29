@@ -102,17 +102,15 @@
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
+  padding: 25px;
+  margin: 0px 30px;
 }
 
 .stat-card {
-  background: linear-gradient(
-    to bottom,
-    #060B28 0%,
-   #0E153A 100%
-  );
+  background: linear-gradient(to bottom, #060b28 0%, #0e153a 100%);
   padding: 35px;
   border-radius: 12px;
-  width: 280px;
+  width: 250px;
   height: 290px;
   color: #fff;
   text-align: center;
@@ -132,4 +130,29 @@
 .stat-extra {
   font-size: 18px;
   color: #aaa;
+}
+
+.chart-section {
+  padding: 25px;
+  background: linear-gradient(to bottom, #060b28 0%, #0e153a 100%);
+  margin: 40px 30px;
+}
+
+@media only screen and (max-width: 480px) {
+  .dashboard {
+ 
+ padding: 0px;
+  margin: 0px 0px;
+}
+
+  .stat-card {
+    width: 310px;
+    height: 300px;
+  }
+
+  .chart-section {
+  padding: 10px;
+  margin: 20px 0px;
+}
+
 }

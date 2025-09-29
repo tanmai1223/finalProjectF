@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../Style/index.css";
 import Sidebar from "../Components/Sidebar";
 import LogCard from "../Components/LogCard";
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 function Tracer() {
   const [logs, setLogs] = useState([]);
@@ -30,7 +32,7 @@ function Tracer() {
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/logs`);
+      const res = await fetch(`${API_URL}/api/logs`);
       const data = await res.json();
 
       
@@ -45,7 +47,7 @@ function Tracer() {
         }
         return groups;
       }, {});
-      console.log(groupedLogs);
+      //console.log(groupedLogs);
       setLogs(groupedLogs);
     } catch (error) {
       console.log("Error is", error);
@@ -63,6 +65,7 @@ function Tracer() {
       <Sidebar />
       <div className="main-content">
         <span className="heading">API Trace Logs</span>
+        <div className="display-tracer">
         {loading ? (
           <p>Loading...</p>
         ) : (
@@ -77,6 +80,7 @@ function Tracer() {
             ))}
           </div>
         )}
+        </div>
       </div>
     </div>
   );

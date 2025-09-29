@@ -5,6 +5,7 @@ import "react-circular-progressbar/dist/styles.css";
 function StatCard({ title, value, displayText, extra, color }) {
   // Ensure value for the circle is between 0–100
   const circleValue = Math.min(Math.max(value, 0), 100);
+  
 
   return (
     <div className="stat-card">
