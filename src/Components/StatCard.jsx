@@ -19,7 +19,7 @@ function StatCard({ title, value, displayText, extra, color }) {
             pathColor: color,
             textColor: "#fff",
             trailColor: "#222",
-            textSize: "18px",
+            textSize: "12px",
           })}
         />
       </div>
