@@ -95,7 +95,9 @@ const API_URL = import.meta.env.VITE_API_URL;
     try {
       const res = await fetch(`${API_URL}/api/logs/control`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" ,"x-api-key":
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGllbnQiOiJQcm9qZWN0IiwiaWF0IjoxNzU5MjI1Mzg4LCJleHAiOjE3NjE4MTczODh9.x-RBO2Sv00Ut0ZYUOCRjJt36SH_ZwanTqehVQ9oyERM",
+          },
         body: JSON.stringify(payload),
       });
       const result = await res.json();
